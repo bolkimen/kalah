@@ -5,6 +5,11 @@ import com.blogspot.mvnblogbuild.kalah.domain.PlayerGameSession;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.stream.IntStream;
+
 import static org.junit.Assert.assertEquals;
 
 public class DTOConverterUtilTest {
@@ -13,11 +18,17 @@ public class DTOConverterUtilTest {
     private final static String BASE_URI = "URI/";
 
     private DTOConverterUtil dtoConverterUtil;
+    private Map<String, String> gameStatus;
 
     @Before
     public void init() {
         dtoConverterUtil = new DTOConverterUtil();
         dtoConverterUtil.setBaseURI(BASE_URI);
+
+        Random rand = new Random();
+        gameStatus = new LinkedHashMap<>();
+        IntStream.range(1, 15)
+                .forEach(i -> gameStatus.put(String.valueOf(i), String.valueOf(rand.nextInt())));
     }
 
     @Test
@@ -34,13 +45,28 @@ public class DTOConverterUtilTest {
         GameStateDTO gameStateDTO = dtoConverterUtil.convertToGameState(game);
         assertEquals(gameStateDTO.getId(), GAME_ID);
         assertEquals(gameStateDTO.getUri(), BASE_URI + GAME_ID);
+        assertEquals(gameStateDTO.getStatus(), gameStatus);
     }
 
     private Game createGame() {
         Game game = new Game();
         game.setId(GAME_ID);
-        game.setFirstPlayer(createPlayerGameSession(1l, 11, new Integer[] {1,2,3,4,5,6}));
-        game.setSecondPlayer(createPlayerGameSession(2l, 22, new Integer[] {21,22,23,24,25,26}));
+        IntStream.range(1, 14)
+                .map(i -> Integer.valueOf(gameStatus.get(String.valueOf(i))))
+                .boxed()
+                .toArray(Integer[]::new);
+        game.setFirstPlayer(createPlayerGameSession(1l,
+                Integer.valueOf(gameStatus.get("7")),
+                IntStream.range(1, 7)
+                        .map(i -> Integer.valueOf(gameStatus.get(String.valueOf(i))))
+                        .boxed()
+                        .toArray(Integer[]::new)));
+        game.setSecondPlayer(createPlayerGameSession(2l,
+                Integer.valueOf(gameStatus.get("14")),
+                IntStream.range(8, 14)
+                        .map(i -> Integer.valueOf(gameStatus.get(String.valueOf(i))))
+                        .boxed()
+                        .toArray(Integer[]::new)));
         return game;
     }
 
