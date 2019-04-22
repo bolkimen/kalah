@@ -9,12 +9,17 @@ import java.io.Serializable;
 @Setter
 @Getter
 @NoArgsConstructor
+@Table(
+        name="game",
+        indexes = { @Index(name = "GAME_INDX_0", columnList = "gameId") }
+        )
 public class Game implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique=true)
     private Integer gameId;
 
     @OneToOne
