@@ -8,7 +8,7 @@ import java.util.Map;
 @Data
 @Builder
 public class GameStateDTO {
-    private Integer id;
+    private Long id;
     private String uri;
     private Map<String, String> status;
 }

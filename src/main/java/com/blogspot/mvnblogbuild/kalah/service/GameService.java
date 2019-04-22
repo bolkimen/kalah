@@ -8,8 +8,9 @@ import com.blogspot.mvnblogbuild.kalah.dto.GameStateDTO;
 import com.blogspot.mvnblogbuild.kalah.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static com.blogspot.mvnblogbuild.kalah.core.KalahCore.INITIAL_STONES_IN_PIT;
@@ -23,18 +24,19 @@ public class GameService {
     @Autowired
     private GameRepository gameRepository;
 
+    @Transactional
     public GameDTO createGame() {
         Game game = new Game();
-        game.setGameId(generateGameId());
         game.setNorthPlayer(initializePlayerGameSession());
         game.setSouthPlayer(initializePlayerGameSession());
-        gameRepository.save(game);
-        return dtoConverterUtil.convertToGame(game);
+        Game savedGame = gameRepository.save(game);
+        return dtoConverterUtil.convertToGame(savedGame);
     }
 
-    public GameStateDTO makeAMove(Integer gameId, Integer pitId) {
-        Game game = gameRepository.findByGameId(gameId);
-        return null;
+    public GameStateDTO makeAMove(Long gameId, Integer pitId) {
+        Optional<Game> game = gameRepository.findById(gameId);
+        // TODO implement game logic
+        return dtoConverterUtil.convertToGameState(game.get());
     }
 
     private PlayerGameSession initializePlayerGameSession() {
@@ -45,10 +47,6 @@ public class GameService {
                 .boxed()
                 .toArray(Integer[]::new));
         return playerGameSession;
-    }
-
-    private Integer generateGameId() {
-        return ThreadLocalRandom.current().nextInt();
     }
 
 }

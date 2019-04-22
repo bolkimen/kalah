@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = KalahApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class GameControllerIntegrationTest {
 
-
     @LocalServerPort
     private int port;
 
@@ -28,7 +27,7 @@ public class GameControllerIntegrationTest {
     HttpHeaders headers = new HttpHeaders();
 
     @Test
-    public void testRetrieveStudentCourse() throws JSONException {
+    public void testCreateGame() throws JSONException {
 
         HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
@@ -36,7 +35,7 @@ public class GameControllerIntegrationTest {
                 createURLWithPort("/games/"),
                 HttpMethod.POST, entity, String.class);
 
-        String expected = "{id:Course1,name:Spring,description:10 Steps}";
+        String expected = "{\"id\":1,\"uri\":\"http://localhost:8090/games/1\"}";
 
         JSONAssert.assertEquals(expected, response.getBody(), false);
     }

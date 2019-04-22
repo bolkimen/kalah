@@ -20,14 +20,14 @@ public class DTOConverterUtil {
 
     public GameDTO convertToGame(Game game) {
         return GameDTO.builder()
-                .id(game.getGameId())
+                .id(game.getId())
                 .uri(getGameURI(game))
                 .build();
     }
 
     public GameStateDTO convertToGameState(Game game) {
         return GameStateDTO.builder()
-                .id(game.getGameId())
+                .id(game.getId())
                 .uri(getGameURI(game))
                 .status(getGameStatus(game))
                 .build();

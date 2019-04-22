@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class GameDTO {
-    private Integer id;
+    private Long id;
     private String uri;
 }

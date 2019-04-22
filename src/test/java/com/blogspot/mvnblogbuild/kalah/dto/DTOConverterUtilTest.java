@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 public class DTOConverterUtilTest {
 
-    private final static Integer GAME_ID = 1234;
+    private final static Long GAME_ID = 1234l;
     private final static String BASE_URI = "URI/";
 
     private DTOConverterUtil dtoConverterUtil;
@@ -50,7 +50,7 @@ public class DTOConverterUtilTest {
 
     private Game createGame() {
         Game game = new Game();
-        game.setGameId(GAME_ID);
+        game.setId(GAME_ID);
         IntStream.range(1, 14)
                 .map(i -> Integer.valueOf(gameStatus.get(String.valueOf(i))))
                 .boxed()
