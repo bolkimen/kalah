@@ -39,8 +39,8 @@ public class DTOConverterUtil {
 
     private Map<String, String> getGameStatus(Game game) {
         Map<String, String> gameStatus = new LinkedHashMap<>();
-        fillPlayerGameStatus(gameStatus, game.getFirstPlayer(), 1);
-        fillPlayerGameStatus(gameStatus, game.getSecondPlayer(), 8);
+        fillPlayerGameStatus(gameStatus, game.getNorthPlayer(), 1);
+        fillPlayerGameStatus(gameStatus, game.getSouthPlayer(), 8);
         return gameStatus;
     }
 

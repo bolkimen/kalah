@@ -1,6 +1,7 @@
 package com.blogspot.mvnblogbuild.kalah.controller;
 
 import com.blogspot.mvnblogbuild.kalah.dto.GameDTO;
+import com.blogspot.mvnblogbuild.kalah.dto.GameStateDTO;
 import com.blogspot.mvnblogbuild.kalah.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,16 +27,16 @@ public class GameController {
             method = RequestMethod.POST,
             produces = APPLICATION_JSON_VALUE)
     public GameDTO createGame() {
-        return "index";
+        return gameService.createGame();
     }
 
     @RequestMapping(
             method = RequestMethod.PUT,
             value = "/{gameId}/pits/{pitId}",
             produces = APPLICATION_JSON_VALUE)
-    public String makeAMove(@PathVariable("gameId") Integer gameId,
-                            @PathVariable("pitId") Integer pitId) {
-        return "index";
+    public GameStateDTO makeAMove(@PathVariable("gameId") Integer gameId,
+                                  @PathVariable("pitId") Integer pitId) {
+        return gameService.makeAMove(gameId, pitId);
     }
 
 }

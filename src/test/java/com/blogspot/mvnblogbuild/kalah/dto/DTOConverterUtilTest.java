@@ -55,13 +55,13 @@ public class DTOConverterUtilTest {
                 .map(i -> Integer.valueOf(gameStatus.get(String.valueOf(i))))
                 .boxed()
                 .toArray(Integer[]::new);
-        game.setFirstPlayer(createPlayerGameSession(1l,
+        game.setNorthPlayer(createPlayerGameSession(1l,
                 Integer.valueOf(gameStatus.get("7")),
                 IntStream.range(1, 7)
                         .map(i -> Integer.valueOf(gameStatus.get(String.valueOf(i))))
                         .boxed()
                         .toArray(Integer[]::new)));
-        game.setSecondPlayer(createPlayerGameSession(2l,
+        game.setSouthPlayer(createPlayerGameSession(2l,
                 Integer.valueOf(gameStatus.get("14")),
                 IntStream.range(8, 14)
                         .map(i -> Integer.valueOf(gameStatus.get(String.valueOf(i))))

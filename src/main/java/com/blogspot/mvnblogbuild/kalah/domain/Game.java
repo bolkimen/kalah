@@ -18,11 +18,11 @@ public class Game implements Serializable {
     private Integer gameId;
 
     @OneToOne
-    @JoinColumn(name = "first_player_id")
-    private PlayerGameSession firstPlayer;
+    @JoinColumn(name = "north_player_id")
+    private PlayerGameSession northPlayer;
 
     @OneToOne
-    @JoinColumn(name = "second_player_id")
-    private PlayerGameSession secondPlayer;
+    @JoinColumn(name = "south_player_id")
+    private PlayerGameSession southPlayer;
 
 }
