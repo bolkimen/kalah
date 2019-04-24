@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Slf4j
 @ControllerAdvice
-@Component//("KalahExceptionHandler")
+@Component
 public class RestExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)

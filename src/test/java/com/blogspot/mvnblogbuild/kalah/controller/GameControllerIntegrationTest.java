@@ -8,17 +8,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = KalahApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = KalahApplication.class)
+@AutoConfigureMockMvc
 public class GameControllerIntegrationTest {
 
     private static final Long NON_EXISTS_GAME_ID = 123456789l;
@@ -26,54 +30,41 @@ public class GameControllerIntegrationTest {
     @Value("${game.base.uri}")
     private String baseUrl;
 
-    @LocalServerPort
-    private int port;
-
     @Autowired
     private GameService gameService;
 
-    private TestRestTemplate restTemplate;
-    private HttpHeaders headers;
-
     private GameDTO existingGame;
+
+    @Autowired
+    private MockMvc mvc;
 
     @Before
     public void init() {
-        restTemplate = new TestRestTemplate();
-        headers = new HttpHeaders();
-
         existingGame = gameService.createGame();
     }
 
     @Test
-    public void testCreateGame() {
+    public void testCreateGame() throws Exception {
 
-        HttpEntity<String> entity = new HttpEntity<String>(null, headers);
-
-        ResponseEntity<GameDTO> response = restTemplate.exchange(
-                createURLWithPort("/games/"),
-                HttpMethod.POST, entity, GameDTO.class);
-
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
-
-        GameDTO game = response.getBody();
-        assertEquals(game.getUri(), baseUrl + game.getId());
+        mvc.perform(post("/games/")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.uri", is("http://localhost:8090/games/2")));
     }
 
     @Test
-    public void testMakeAMoveWithNonExistsGame() {
+    public void testMakeAMoveWithNonExistsGame() throws Exception {
 
-        HttpEntity<String> entity = new HttpEntity<String>(null, headers);
-
-        ResponseEntity response = restTemplate.exchange(
-                createURLWithPort("/games/" + NON_EXISTS_GAME_ID + "/pits/1"),
-                HttpMethod.PUT, entity, Object.class);
-
-        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+        mvc.perform(put("/games/" + NON_EXISTS_GAME_ID + "/pits/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
+        return "http://localhost:" + 123 + uri;
     }
 
 }
