@@ -40,6 +40,7 @@ public class GameService {
         return dtoConverterUtil.convertToGame(savedGame);
     }
 
+    @Transactional
     public GameStateDTO makeAMove(Long gameId, Integer pitId) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new NotFoundException(format("Game with ID %d is not found", gameId)));
