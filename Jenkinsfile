@@ -1,9 +1,16 @@
 pipeline {
-    agent { docker { image 'maven:3.3.3' } }
+    agent {
+        node {
+            label "docker-builder"
+        }
+    }
     stages {
         stage('build') {
             steps {
-                sh 'mvn --version'
+                sh('''#!/bin/bash -ex
+                DOCKER_BUILDKIT=1 docker build --target test --pull \\
+                -t ${IMAGE}:swagger .
+                ''')
             }
         }
     }
