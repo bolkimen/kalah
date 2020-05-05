@@ -1,8 +1,6 @@
 pipeline {
     agent {
-        node {
-            label "jenkins-docker"
-        }
+        dockerfile true
     }
     stages {
         stage('test') {
