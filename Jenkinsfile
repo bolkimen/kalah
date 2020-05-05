@@ -2,6 +2,9 @@ pipeline {
     agent {
         dockerfile true
     }
+    environment {
+        DOCKER_BUILDKIT='1'
+    }
     stages {
         stage('test') {
             steps {
