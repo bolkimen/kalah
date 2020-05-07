@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        dockerfile true
-    }
+    agent none
     environment {
         DOCKER_BUILDKIT='1'
     }
