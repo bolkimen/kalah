@@ -17,16 +17,21 @@ pipeline {
             steps {
                 sh('''#!/bin/bash -ex
                 DOCKER_BUILDKIT=1 docker build --target test \\
-                -t ${env.BUILD_ID}:test .
+                -t ${env.BUILD_NUMBER}:test .
                 ''')
             }
         }
 
         stage('app') {
+            when {
+                 expression {
+                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                   }
+                 }
             steps {
                  sh('''#!/bin/bash -ex
                  DOCKER_BUILDKIT=1 docker build --target app \\
-                 -t ${env.BUILD_ID}:app .
+                 -t ${env.BUILD_NUMBER}:app .
                  ''')
             }
         }
