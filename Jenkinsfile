@@ -17,7 +17,7 @@ pipeline {
             steps {
                 sh('''#!/bin/bash -ex
                 DOCKER_BUILDKIT=1 docker build --target test \\
-                -t ${env.BUILD_NUMBER}:test .
+                -t ${BUILD_NUMBER}:test .
                 ''')
             }
         }
@@ -31,7 +31,7 @@ pipeline {
             steps {
                  sh('''#!/bin/bash -ex
                  DOCKER_BUILDKIT=1 docker build --target app \\
-                 -t ${env.BUILD_NUMBER}:app .
+                 -t ${BUILD_NUMBER}:app .
                  ''')
             }
         }
