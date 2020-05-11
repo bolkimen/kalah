@@ -3,12 +3,21 @@ pipeline {
     environment {
         DOCKER_BUILDKIT='1'
     }
+
+    parameters {
+        string(
+                name: 'RELEASE',
+                defaultValue: 'Release version',
+                description: 'release version'
+        )
+    }
+
     stages {
         stage('test') {
             steps {
                 sh('''#!/bin/bash -ex
                 DOCKER_BUILDKIT=1 docker build --target test \\
-                -t ${IMAGE}:test .
+                -t ${env.BUILD_ID}:test .
                 ''')
             }
         }
@@ -17,7 +26,7 @@ pipeline {
             steps {
                  sh('''#!/bin/bash -ex
                  DOCKER_BUILDKIT=1 docker build --target app \\
-                 -t ${IMAGE}:app .
+                 -t ${env.BUILD_ID}:app .
                  ''')
             }
         }
