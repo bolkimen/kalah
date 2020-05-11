@@ -1,14 +1,11 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_BUILDKIT='1'
-    }
 
     parameters {
         string(
-                name: 'RELEASE',
-                defaultValue: 'Release version',
-                description: 'release version'
+                name: 'RELEASE_PREFIX',
+                defaultValue: 'rel_',
+                description: 'release prefix for container'
         )
     }
 
@@ -17,7 +14,7 @@ pipeline {
             steps {
                 sh('''#!/bin/bash -ex
                 DOCKER_BUILDKIT=1 docker build --target test \\
-                -t ${BUILD_NUMBER}:test .
+                -t ${RELEASE_PREFIX}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:test .
                 ''')
             }
         }
@@ -31,7 +28,7 @@ pipeline {
             steps {
                  sh('''#!/bin/bash -ex
                  DOCKER_BUILDKIT=1 docker build --target app \\
-                 -t ${BUILD_NUMBER}:app .
+                 -t ${RELEASE_PREFIX}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:app .
                  ''')
             }
         }
