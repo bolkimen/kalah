@@ -18,7 +18,7 @@ pipeline {
             steps {
                 sh('''#!/bin/bash -ex
                 DOCKER_BUILDKIT=1 docker build --target test \\
-                -t ${GIT_BRANCH}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:test .
+                -t ${GIT_COMMIT}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:test .
                 ''')
             }
         }
@@ -32,7 +32,7 @@ pipeline {
             steps {
                  sh('''#!/bin/bash -ex
                  DOCKER_BUILDKIT=1 docker build --target app \\
-                 -t ${GIT_BRANCH}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:app .
+                 -t ${GIT_COMMIT}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:app .
                  ''')
             }
         }
