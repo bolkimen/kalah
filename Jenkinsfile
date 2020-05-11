@@ -14,7 +14,7 @@ pipeline {
             steps {
                 sh('''#!/bin/bash -ex
                 DOCKER_BUILDKIT=1 docker build --target test \\
-                -t ${RELEASE_PREFIX}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:test .
+                -t ${param.RELEASE_PREFIX}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:test .
                 ''')
             }
         }
@@ -28,7 +28,7 @@ pipeline {
             steps {
                  sh('''#!/bin/bash -ex
                  DOCKER_BUILDKIT=1 docker build --target app \\
-                 -t ${RELEASE_PREFIX}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:app .
+                 -t ${param.RELEASE_PREFIX}_kalah_${BRANCH_NAME}${CHANGE_ID}${BUILD_NUMBER}:app .
                  ''')
             }
         }
