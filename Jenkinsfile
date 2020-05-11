@@ -10,7 +10,7 @@ pipeline {
     }
 
     stages {
-        stage('test') {
+        stage('Run tests') {
             steps {
                 sh('''#!/bin/bash -ex
                 DOCKER_BUILDKIT=1 docker build --target test \\
@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('app') {
+        stage('Build docker app') {
             when {
                  expression {
                      currentBuild.result == null || currentBuild.result == 'SUCCESS'
@@ -32,5 +32,15 @@ pipeline {
                  ''')
             }
         }
+
+//        stage('Push docker image') {
+//            steps {
+//                sh('''#!/bin/bash -ex
+//echo "** Pushing docker image"
+//docker tag kalah:latest kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app
+//docker push kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app
+//''')
+//            }
+//        }
     }
 }
