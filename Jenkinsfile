@@ -1,8 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        LS = "${sh(script:'ls -lah', returnStdout: true).trim()}"
+    }
 //    environment {
-//      registry = "docker_hub_account/repository_name"
+//      registry = "bolkimen/kalah"
 //      registryCredential = 'dockerhub'
 //    }
 
@@ -15,6 +18,12 @@ pipeline {
     }
 
     stages {
+        stage("Env Variables") {
+            steps {
+                echo "LS = ${env.LS}"
+            }
+        }
+
         stage('Run tests') {
             steps {
                 sh('''#!/bin/bash -ex
@@ -35,6 +44,13 @@ pipeline {
                  DOCKER_BUILDKIT=1 docker build --target app \\
                  -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app .
                  ''')
+            }
+        }
+
+        stage('Push image') {
+            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-bolkimen') {
+                app.push("${env.BUILD_NUMBER}")
+                app.push("latest")
             }
         }
 
