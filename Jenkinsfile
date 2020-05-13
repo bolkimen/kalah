@@ -50,7 +50,7 @@ pipeline {
                     docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
                         sh('''#!/bin/bash -ex
                         docker tag kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest bolkimen/kalah:release${BUILD_NUMBER}
-                        docker push bolkimen/kalah:release${BUILD_NUMBER}
+                        docker -D push bolkimen/kalah:release${BUILD_NUMBER}
                         ''')
                     }
                 }
