@@ -48,9 +48,11 @@ pipeline {
         }
 
         stage('Push image') {
-            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-bolkimen') {
-                app.push("${env.BUILD_NUMBER}")
-                app.push("latest")
+            script {
+                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-bolkimen') {
+                    app.push("${env.BUILD_NUMBER}")
+                    app.push("latest")
+                }
             }
         }
 
