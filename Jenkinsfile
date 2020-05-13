@@ -39,7 +39,7 @@ pipeline {
             steps {
                  sh('''#!/bin/bash -ex
                  DOCKER_BUILDKIT=1 docker build --target app \\
-                 -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app .
+                 -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest .
                  ''')
             }
         }
@@ -49,8 +49,8 @@ pipeline {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
                         sh('''#!/bin/bash -ex
-                        docker tag kalah:latest kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app
-                        docker push kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app
+                        docker tag kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest kalah_${BUILD_NUMBER}_${GIT_COMMIT}:release
+                        docker push kalah_${BUILD_NUMBER}_${GIT_COMMIT}:release
                         ''')
                     }
                 }
