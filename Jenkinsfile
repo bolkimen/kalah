@@ -3,12 +3,8 @@ pipeline {
 
     environment {
         LS = "${sh(script:'ls -lah', returnStdout: true).trim()}"
-        dockerImage = ''
+        registryCredential = 'dockehub_bolkimen'
     }
-//    environment {
-//      registry = "bolkimen/kalah"
-//      registryCredential = 'dockerhub'
-//    }
 
     parameters {
         string(
@@ -45,29 +41,21 @@ pipeline {
                  DOCKER_BUILDKIT=1 docker build --target app \\
                  -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app .
                  ''')
-                 script {
-                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                 }
             }
         }
 
         stage('Push image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockehub_bolkimen') {
-                        dockerImage.push()
+                    docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+                        sh('''#!/bin/bash -ex
+                        docker tag kalah:latest kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app
+                        docker push kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app
+                        ''')
                     }
                 }
             }
         }
 
-//        stage('Push docker image') {
-//            steps {
-//                sh('''#!/bin/bash -ex
-//docker tag kalah:latest kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app
-//docker push kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app
-//''')
-//            }
-//        }
     }
 }
