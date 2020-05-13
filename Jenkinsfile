@@ -49,8 +49,8 @@ pipeline {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
                         sh('''#!/bin/bash -ex
-                        docker tag kalah:latest kalah_${BUILD_NUMBER}_${GIT_COMMIT}:release
-                        docker push kalah_${BUILD_NUMBER}_${GIT_COMMIT}:release
+                        docker tag kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest kalah:release
+                        docker push kalah:release
                         ''')
                     }
                 }
