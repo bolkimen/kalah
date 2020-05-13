@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         LS = "${sh(script:'ls -lah', returnStdout: true).trim()}"
+        dockerImage = ''
     }
 //    environment {
 //      registry = "bolkimen/kalah"
@@ -44,6 +45,9 @@ pipeline {
                  DOCKER_BUILDKIT=1 docker build --target app \\
                  -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:app .
                  ''')
+                 script {
+                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                 }
             }
         }
 
@@ -51,8 +55,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockehub_bolkimen') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
+                        dockerImage.push()
                     }
                 }
             }
