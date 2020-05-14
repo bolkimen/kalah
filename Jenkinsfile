@@ -4,6 +4,7 @@ pipeline {
     environment {
         LS = "${sh(script:'ls -lah', returnStdout: true).trim()}"
         registryCredential = 'dockehub_bolkimen'
+        DOCKER_BUILDKIT = "1"
     }
 
     parameters {
@@ -39,6 +40,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://docker.io', registryCredential) {
+                        sh("docker login -u ${USERNAME} -p ${PASSWORD} https://docker.io")
                         sh('''#!/bin/bash -ex
                         docker tag kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest bolkimen/kalah:release${BUILD_NUMBER}
                         docker push bolkimen/kalah:release${BUILD_NUMBER}
