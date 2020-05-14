@@ -21,14 +21,6 @@ pipeline {
             }
         }
 
-        stage('Run tests') {
-            steps {
-                sh('''#!/bin/bash -ex
-                mvn clean verify
-                ''')
-            }
-        }
-
         stage('Build docker app') {
             when {
                  expression {
