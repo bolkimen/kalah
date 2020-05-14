@@ -16,6 +16,7 @@ pipeline {
     }
 
     stages {
+        def img
         stage("Env Variables") {
             steps {
                 echo "LS = ${env.LS}"
@@ -34,6 +35,7 @@ pipeline {
                  -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest .
                  ''')
             }
+            myImg = docker.build 'kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest'
         }
 
         stage('Push image') {
