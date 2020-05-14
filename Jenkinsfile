@@ -39,12 +39,15 @@ pipeline {
         stage('Push image') {
             steps {
                 script {
+                    withCredentials([usernamePassword( credentialsId: registryCredential, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+
                     docker.withRegistry('https://docker.io', registryCredential) {
                         sh("docker login -u ${USERNAME} -p ${PASSWORD} https://docker.io")
                         sh('''#!/bin/bash -ex
                         docker tag kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest bolkimen/kalah:release${BUILD_NUMBER}
                         docker push bolkimen/kalah:release${BUILD_NUMBER}
                         ''')
+                    }
                     }
                 }
             }
