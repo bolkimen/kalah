@@ -29,21 +29,27 @@ pipeline {
                    }
                  }
             steps {
-                 sh('''#!/bin/bash -ex
-                 DOCKER_BUILDKIT=1 docker build --target app \\
-                 -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest .
-                 ''')
+                script {
+                    docker.withRegistry('https://docker.io', registryCredential) {
+                        sh('''#!/bin/bash -ex
+                        DOCKER_BUILDKIT=1 docker build --target app \\
+                        -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest .
+                        ''')
+                    }
+                }
             }
         }
 
         stage('Push image') {
             steps {
+                script {
                     docker.withRegistry('https://docker.io', registryCredential) {
                         sh('''#!/bin/bash -ex
                         docker tag kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest bolkimen/kalah:release${BUILD_NUMBER}
                         docker push bolkimen/kalah:release${BUILD_NUMBER}
                         ''')
                     }
+                }
             }
         }
 
