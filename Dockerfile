@@ -28,10 +28,6 @@ COPY . .
 RUN --mount=type=cache,mode=1777,uid=1000,target=/home/builduser/.m2/repository \
         mvn clean verify -U -V --batch-mode -Dexternal.maven.fixed-ports.skip=false -Dsurefire.useFile=false -T4 -Dmaven.test.failure.ignore=true
 
-
-FROM build as test
-ENTRYPOINT ["mvn", "clean", "test"]
-
 # Application image
 FROM openjdk:15-slim as app
 

@@ -24,8 +24,7 @@ pipeline {
         stage('Run tests') {
             steps {
                 sh('''#!/bin/bash -ex
-                DOCKER_BUILDKIT=1 docker build --target test \\
-                -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:test .
+                mvn clean verify
                 ''')
             }
         }
