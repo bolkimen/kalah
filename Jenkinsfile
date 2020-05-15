@@ -1,57 +1,32 @@
 pipeline {
-    agent any
-
-    environment {
-        LS = "${sh(script:'ls -lah', returnStdout: true).trim()}"
-        registryCredential = 'dockehub_bolkimen'
-        DOCKER_BUILDKIT = "1"
-    }
-
-    parameters {
-        string(
-                name: 'RELEASE_PREFIX',
-                defaultValue: 'rel_',
-                description: 'release prefix for container'
-        )
-    }
-
-    stages {
-        stage("Env Variables") {
-            steps {
-                echo "LS = ${env.LS}"
-            }
+  environment {
+    registry = "bolkimen/kalah"
+    registryCredential = 'dockehub_bolkimen'
+    dockerImage = ''
+    DOCKER_BUILDKIT = "1"
+  }
+  agent any
+  stages {
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
-
-        stage('Build docker app') {
-            when {
-                 expression {
-                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
-                   }
-                 }
-            steps {
-                script {
-                    docker.withRegistry('https://docker.io', registryCredential) {
-                        sh('''#!/bin/bash -ex
-                        DOCKER_BUILDKIT=1 docker build --target app \\
-                        -t kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest .
-                        ''')
-                    }
-                }
-            }
-        }
-
-        stage('Push image') {
-            steps {
-                script {
-                    docker.withRegistry('https://docker.io', registryCredential) {
-                        sh('''#!/bin/bash -ex
-                        docker tag kalah_${BUILD_NUMBER}_${GIT_COMMIT}:latest bolkimen/kalah:release${BUILD_NUMBER}
-                        docker push bolkimen/kalah:release${BUILD_NUMBER}
-                        ''')
-                    }
-                }
-            }
-        }
-
+      }
     }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+    }
+  }
 }
